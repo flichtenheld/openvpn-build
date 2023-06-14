@@ -37,9 +37,19 @@ if [ -n "${VCPKG_CACHE:-}" ]; then
    ssh $WINDOWS_MSI_BUILDHOST "cd $WINDOWS_MSI_WORKDIR/windows-msi && echo \$Env:VCPKG_BINARY_SOURCES = \"$VCPKG_CACHE\" >>build-and-package-env.ps1"
 fi
 ssh $WINDOWS_MSI_BUILDHOST "cd $WINDOWS_MSI_WORKDIR/windows-msi && \"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat\" x64 && env n3fips_password=${HSM_USER:-cuuser}:$HSM_PASSWORD powershell ./build-and-package.ps1 -sign"
+ssh $WINDOWS_MSI_BUILDHOST "mkdir $WINDOWS_MSI_WORKDIR/windows-msi/symstore"
+for arch in x64 x86 arm64; do
+    ssh $WINDOWS_MSI_BUILDHOST "\"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\symstore.exe\" add /r /s $WINDOWS_MSI_WORKDIR/windows-msi/symstore /t OpenVPN-GUI /v ${OPENVPN_GUI_CURRENT_FULL_VERSION} /f $WINDOWS_MSI_WORKDIR/src/openvpn-gui/out/build/${arch}-release/*.pdb"
+done
+for arch in x64 Win32 ARM64; do
+    ssh $WINDOWS_MSI_BUILDHOST "\"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\symstore.exe\" add /r /s $WINDOWS_MSI_WORKDIR/windows-msi/symstore /t OpenVPN /v ${BUILD_VERSION} /f $WINDOWS_MSI_WORKDIR/src/openvpn/${arch}-Output/Release/*.pdb"
+done
 
 mkdir -p "$OUTPUT/upload/"
 scp "$WINDOWS_MSI_BUILDHOST":"$WINDOWS_MSI_WORKDIR/windows-msi/image/OpenVPN-${BUILD_VERSION}"-*.msi "$OUTPUT/upload/"
+scp -r "$WINDOWS_MSI_BUILDHOST":"$WINDOWS_MSI_WORKDIR/windows-msi/symstore" "$OUTPUT/"
 read -p "Upload MSIs to $SECONDARY_WEBSERVER?"
 # upload MSIs
 $SCRIPT_DIR/sign-and-push.sh
+# upload PDBs
+rsync rsync -avz --exclude 000Admin "$OUTPUT/symstore/" "$SECONDARY_WEBSERVER":/var/www/symbols/
