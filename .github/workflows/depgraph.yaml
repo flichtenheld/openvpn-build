@@ -30,7 +30,7 @@ jobs:
       run: ./vcpkg version
     - name: Run vcpkg (openvpn)
       working-directory: src/openvpn/contrib/vcpkg-manifests/windows/
-      run: ${{ github.workspace }}/src/vcpkg/vcpkg install --overlay-triplets ${{ github.workspace }}/src/openvpn/contrib/vcpkg-triplets --overlay-ports ${{ github.workspace }}/src/openvpn/contrib/vcpkg-ports --dry-run
+      run: ${{ github.workspace }}/src/vcpkg/vcpkg install --debug --overlay-triplets ${{ github.workspace }}/src/openvpn/contrib/vcpkg-triplets --overlay-ports ${{ github.workspace }}/src/openvpn/contrib/vcpkg-ports --dry-run
     - name: Run vcpkg (openvpn-gui)
       working-directory: src/openvpn-gui
-      run: ${{ github.workspace }}/src/vcpkg/vcpkg install --dry-run
+      run: ${{ github.workspace }}/src/vcpkg/vcpkg install --debug --dry-run
