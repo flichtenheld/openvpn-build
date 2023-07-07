@@ -4,7 +4,7 @@ dnl ============================================================
 
 dnl TAP-Windows binaries
 dnl renovate: datasource=github-releases depName=OpenVPN/tap-windows6
-define([PRODUCT_TAP_WIN_VERSION],           [9.26.0])
+define([PRODUCT_TAP_WIN_VERSION],           [9.25.0])
 dnl Note: Not handled by renovate
 define([PRODUCT_TAP_WIN_INSTALLER_VERSION], [I0])
 define([PRODUCT_TAP_WIN_COMPONENT_ID],      [tap0901])
@@ -30,7 +30,7 @@ dnl The only binaries which Openvpn-build uses from Easy-RSA, are the *nix style
 dnl (32bit only) binaries for Windows, from easy-rsa/distro/windows/bin.
 dnl Further details: easy-rsa/distro/windows/Licensing/mksh-Win32.txt
 dnl renovate: datasource=github-releases depName=OpenVPN/easy-rsa
-define([EASYRSA_VERSION], [3.1.5])
+define([EASYRSA_VERSION], [3.1.2])
 
 dnl ============================================================
 dnl MSI Provisioning
