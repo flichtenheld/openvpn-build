@@ -124,11 +124,12 @@ jobs:
           $dt = Get-Date -Format "yyyyMMddThhmm"
           echo "DATETIME=${dt}" >> $Env:GITHUB_ENV
 
-      - name: Archive artifacts
+      - name: Archive MSI
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: openvpn-msi-${{ env.DATETIME }}-${{ env.OPENVPN_COMMIT }}-${{ matrix.arch }}
           path: ${{ github.workspace }}\windows-msi\image\*-${{ matrix.arch }}.msi
+          archive: false
 
       - name: Save vcpkg cache
         if: steps.vcpkg-restore.outputs.cache-hit != 'true'
@@ -165,14 +166,14 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_TCLIENT_HOST }}
           known_hosts: unnecessary
 
-      - name: Cleanup old artifacts
+      - name: Cleanup old MSIs
         run:
           rm -fr msi
 
-      - name: Get artifacts
+      - name: Get MSI
         uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8.0.0
         with:
-          pattern: "openvpn-msi-*-amd64"
+          pattern: "*-amd64.msi"
           path: msi
 
       - name: Run AWS test
