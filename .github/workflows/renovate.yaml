@@ -5,7 +5,6 @@ on:
   workflow_dispatch:
 jobs:
   renovate:
-    if: github.repository_owner == 'OpenVPN'
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -19,9 +18,7 @@ jobs:
           LOG_LEVEL: debug
           RENOVATE_REPOSITORIES: >-
             ${{ github.repository_owner }}/openvpn-build,
-            ${{ github.repository_owner }}/openvpn,
-            ${{ github.repository_owner }}/openvpn3,
-            ${{ github.repository_owner }}/openvpn-gui
+            ${{ github.repository_owner }}/openvpn
           RENOVATE_IGNORE_PRESETS: >-
             local>openvpntechnologies/ops-sec-renovate,
             local>openvpntechnologies/ops-saas-renovate,
